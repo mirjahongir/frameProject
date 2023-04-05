@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Core.Results.Normal;
 
 namespace Core.Interfaces.Stages.Normal
@@ -7,8 +8,6 @@ namespace Core.Interfaces.Stages.Normal
     {
         ITryStage OnEach(Action action);
         ITryStage OnEach(Action<Result> action);
-        ITryStage OnEach(Func<Result, Result> result);
-        
 
     }
 }

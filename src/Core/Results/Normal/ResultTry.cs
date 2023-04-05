@@ -8,17 +8,17 @@ namespace Core.Results.Normal
     /// </summary>
     public partial class Result : ITryStage
     {
-        public ISuccessStage OnNext(Func<Result> result)
+        public ISuccessStage StartTry(Func<Result> result)
         {
             throw new NotImplementedException();
         }
 
-        public ISuccessStage OnNext(Action<Result> result)
+        public ISuccessStage StartTry(Action<Result> result)
         {
             throw new NotImplementedException();
         }
 
-        public ISuccessStage OnNext(Action result)
+        public ISuccessStage StartTry(Action result)
         {
             throw new NotImplementedException();
         }

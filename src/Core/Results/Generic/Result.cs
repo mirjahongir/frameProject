@@ -1,4 +1,5 @@
-﻿using Core.Results.Normal;
+﻿using Core.Interfaces.Stages.Generic;
+using Core.Results.Normal;
 
 namespace Core.Results.Generic
 {
@@ -10,5 +11,13 @@ namespace Core.Results.Generic
         private T _value;
         public T Value => _value;
         #endregion
+
+        public IEachStage<T> Create(T model)
+        {
+            _value = model;
+            return this;
+        }
+
+
     }
 }

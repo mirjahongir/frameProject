@@ -8,29 +8,24 @@ namespace Core.Results.Normal
     /// </summary>
     public partial class Result : IEachStage
     {
- 
-     
+        private Action eachAction;
+        private Action<Result> eachActionOne;
+
         public ITryStage OnEach(Action action)
         {
-            if (IsFaild) return this;
+            eachAction = action;
             return this;
         }
-
         public ITryStage OnEach(Action<Result> action)
         {
-            throw new NotImplementedException();
+            eachActionOne = action;
+            return this;
         }
-
-        public ITryStage OnEach(Func<Result, Result> result)
+        private void EachAction()
         {
-            throw new NotImplementedException();
+            eachAction?.Invoke();
+            eachActionOne?.Invoke(this);
         }
-
-        private string GetDebuggerDisplay()
-        {
-            return ToString();
-        }
-     
 
     }
 }
