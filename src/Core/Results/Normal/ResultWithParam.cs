@@ -1,7 +1,7 @@
 ﻿using System;
-using Core.Interfaces.Stages.Normal;
+using Jh.Core.Interfaces.Stages.Normal;
 
-namespace Core.Results.Normal
+namespace Jh.Core.Results.Normal
 {
     /// <summary>
     /// ISuccessStageWithParam 
@@ -13,7 +13,7 @@ namespace Core.Results.Normal
             if (IsCheck) return this;
             try
             {
-                var model = GetSeconModel<T>();
+                var model = GetFirstModel<T>();
                 method(this, model);
                 return this;
             }

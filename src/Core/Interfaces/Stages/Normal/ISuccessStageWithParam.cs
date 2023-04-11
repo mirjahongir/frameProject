@@ -1,8 +1,7 @@
 ﻿using System;
+using Jh.Core.Results.Normal;
 
-using Core.Results.Normal;
-
-namespace Core.Interfaces.Stages.Normal
+namespace Jh.Core.Interfaces.Stages.Normal
 {
     public interface ISuccessStageWithParam : ISuccessStage
     {

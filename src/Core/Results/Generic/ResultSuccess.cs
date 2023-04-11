@@ -1,20 +1,56 @@
-﻿
-using System;
+﻿using System;
+using Jh.Core.Errors;
+using Jh.Core.Interfaces.Stages.Generic;
 
-using Core.Interfaces.Stages.Generic;
 
-namespace Core.Results.Generic
+namespace Jh.Core.Results.Generic
 {
     public partial class Result<T> : ISuccessStage<T>
     {
-        public ISuccessStage<T> OnNext(Func<T> next)
+        private FrameException Error { get; }
+        #region
+        public IErrorStage<T> OnError(Action action)
         {
-            throw new NotImplementedException();
+            action();
+            return this;
         }
 
-        ISuccessStage<T> ISuccessStage<T>.OnNext(Action action)
+        public IErrorStage<T> OnError(Action<Result<T>, FrameException> action)
         {
-            throw new NotImplementedException();
+            action(this, Error);
+            return this;
         }
+
+        #endregion
+        #region
+        public ISuccessStage<T> OnNext(Action action)
+        {
+            if (IsChecked) return this;
+            try
+            {
+                action.Invoke();
+                return this;
+            }
+            catch (Exception ex)
+            {
+                return ParseError(ex);
+            }
+        }
+
+        public ISuccessStage<T> OnNext(Action<Result<T>> action)
+        {
+
+            if (IsChecked) return this;
+            try
+            {
+                action.Invoke(this);
+                return this;
+            }
+            catch (Exception ex)
+            {
+                return ParseError(ex);
+            }
+        }
+        #endregion
     }
 }

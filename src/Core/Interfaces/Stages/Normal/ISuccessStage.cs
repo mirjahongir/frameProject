@@ -1,10 +1,8 @@
 ﻿using System;
+using Jh.Core.Errors;
+using Jh.Core.Results.Normal;
 
-using Core.Errors;
-using Core.Interfaces.Stages.Generic;
-using Core.Results.Normal;
-
-namespace Core.Interfaces.Stages.Normal
+namespace Jh.Core.Interfaces.Stages.Normal
 {
     public interface ISuccessStage
     {

@@ -1,15 +1,21 @@
 ﻿using System;
 
-namespace Core.Interfaces.Stages.Generic
+using Jh.Core.Errors;
+using Jh.Core.Interfaces.Stages.Normal;
+using Jh.Core.Results.Generic;
+
+namespace Jh.Core.Interfaces.Stages.Generic
 {
     public interface ISuccessStage<T>
     {
-        #region OnNext
-        ISuccessStage<T> OnNext(Func<T> next);
+        #region
         ISuccessStage<T> OnNext(Action action);
+        ISuccessStage<T> OnNext(Action<Result<T>> action);
         #endregion
-        #region Error
 
+        #region Error
+        IErrorStage<T> OnError(Action action);
+        IErrorStage<T> OnError(Action<Result<T>, FrameException> action);
         #endregion
     }
 }

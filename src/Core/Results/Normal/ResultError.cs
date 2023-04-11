@@ -1,22 +1,44 @@
 ﻿using System;
 
-using Core.Interfaces.Stages.Normal;
+using Jh.Core.Interfaces.Stages.Normal;
 
-namespace Core.Results.Normal
+namespace Jh.Core.Results.Normal
 {
     /// <summary>
     /// IErrorStage - Hato chiqqanda shu Methodlar ishlaydi
     /// </summary>
     public partial class Result : IErrorStage
     {
-        public IFinallyStage Finally(Func<Result> result)
+
+        public Result Finally(Action<Result> action)
         {
-            throw new NotImplementedException();
+            action(this);
+            return this;
         }
 
-        public IFinallyStage Finally(Action result)
+        public T Finally<T>(Func<Result, T> method)
         {
-            throw new NotImplementedException();
+            return method(this);
+        }
+
+        public T2 Finally<T, T2>(Func<Result, T, T2> method)
+        {
+            var firsModel = GetFirstModel<T>();
+
+            return method(this, firsModel);
+        }
+
+        public T3 Finally<T, T2, T3>(Func<Result, T, T2, T3> method)
+        {
+            var firstModel = GetFirstModel<T>();
+            var secondModel = GetSeconModel<T2>();
+            return method(this, firstModel, secondModel);
+        }
+
+        Result IErrorStage.Finally(Action action)
+        {
+            action();
+            return this;
         }
     }
 }

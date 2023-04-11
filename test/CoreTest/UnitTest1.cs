@@ -1,26 +1,32 @@
-using Core.Results.Normal;
+using System.Net.Http.Headers;
 
-namespace CoreTest
+using Jh.Core.Results.Generic;
+using Jh.Core.Results.Normal;
+
+namespace Jh.CoreTest
 {
     public class UnitTest1
     {
         [Fact]
-        public void Test1()
+        public void TestGenericResult()
         {
-            var result = Result.Create()
-                .OnEach(() => { })
-                .StartTry(() => { })
-                .OnNext<Company>(model =>
-                {
-                    return new Company() { Name = "Joha" };
+            var company = Result<Company>
+                 .Create(new Company())
+                 .OnEach(model =>
+                 {
+                     Console.WriteLine(model);
+                 }).StartTry<User>(m =>
+                 {
+                     m.SetValue(new Company() { Name = "Joha" });
+                     return new User();
+                 }).OnNext<User>((model, user) =>
+                 {
+                     return user;
+                 }).OnError((model, err) =>
+                 {
 
-                }).OnNext<Company>((model, company) =>
-                {
-                    
-                }).OnNext(model =>
-                {
-                    return (new Company(), new User());
-                });
+                 });
+            
         }
 
     }

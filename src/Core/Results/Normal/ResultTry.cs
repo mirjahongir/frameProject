@@ -1,26 +1,58 @@
 ﻿using System;
-using Core.Interfaces.Stages.Normal;
+using Jh.Core.Interfaces.Stages.Normal;
 
-namespace Core.Results.Normal
+namespace Jh.Core.Results.Normal
 {
     /// <summary>
     /// ITryStage
     /// </summary>
     public partial class Result : ITryStage
     {
-        public ISuccessStage StartTry(Func<Result> result)
+
+        public ISuccessStage StartTry(Action<Result> action)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                action(this);
+                return this;
+            }
+            catch (Exception ex)
+            {
+                ParseError(ex);
+                return this;
+            }
         }
 
-        public ISuccessStage StartTry(Action<Result> result)
+        public ISuccessStage StartTry(Action action)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                action();
+                return this;
+            }
+            catch (Exception ex)
+            {
+                ParseError(ex);
+                return this;
+            }
         }
 
-        public ISuccessStage StartTry(Action result)
+        public ISuccessStage StartTry<T>(Func<Result, T> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                _first = method(this);
+                return this;
+
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
     }
 }

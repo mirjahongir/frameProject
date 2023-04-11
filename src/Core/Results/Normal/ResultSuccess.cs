@@ -1,12 +1,10 @@
 ﻿using System;
+using Jh.Core.Errors;
+using Jh.Core.Interfaces.Stages.Normal;
 
-using Core.Errors;
-using Core.Interfaces.Stages.Normal;
-
-using Microsoft.Win32.SafeHandles;
-
-namespace Core.Results.Normal
+namespace Jh.Core.Results.Normal
 {
+
     /// <summary>
     /// ISuccessStage Bu yerda asosiy logika ishlaydi
     /// </summary>
