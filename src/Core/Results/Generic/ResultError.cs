@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Jh.Core.Interfaces.Stages.Generic;
 
 namespace Jh.Core.Results.Generic
@@ -34,6 +35,11 @@ namespace Jh.Core.Results.Generic
             var model = GetObject<T1>();
             var second = GetObject<T2>();
             return method(this, model, second);
+        }
+
+        public Result<T> Finally()
+        {
+            return this;
         }
     }
 }

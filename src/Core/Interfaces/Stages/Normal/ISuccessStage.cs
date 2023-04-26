@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using Jh.Core.Errors;
 using Jh.Core.Results.Normal;
 
@@ -11,7 +13,9 @@ namespace Jh.Core.Interfaces.Stages.Normal
         ISuccessStage OnNext(Action action);
         ISuccessStage OnNext(Action<Result> result);
         ISuccessStageWithParam OnNext<T>(Func<Result, T> result);
+        ISuccessStageWithParam OnNext<T>(Func<Result, Task<T>> result);
         ISuccessStageWithParam OnNext<T, T1>(Func<Result, Tuple<T, T1>> result);
+        ISuccessStageWithParam OnNext<T, T1>(Func<Result, Task< Tuple<T, T1>>> result);
         #endregion
 
         #region On Error

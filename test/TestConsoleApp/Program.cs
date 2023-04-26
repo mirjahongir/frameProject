@@ -1,20 +1,21 @@
-﻿
-
-using Jh.Core.Interfaces.Repository;
-using Jh.EfCoreRepository.Interfaces;
+﻿using Jh.Core.Interfaces.Repository;
 
 namespace TestConsoleApp
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static  void Main(string[] args)
         {
-            //IDataContext context;
-            //var company = new Jh.EfCoreRepository.Repository.EfRepository<Company,int>(context);
-            //company.Add(new Company() { });
+           
         }
 
     }
+    public class Message
+    {
+        public string Id { get; set; }
+        public string Title { get; set; }
+    }
+   
     public class Company:IEntity<int>
     {
         public int Id { get; set; }

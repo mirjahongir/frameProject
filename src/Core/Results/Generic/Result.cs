@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Jh.Core.Interfaces.Stages.Generic;
 
 namespace Jh.Core.Results.Generic
@@ -8,9 +9,14 @@ namespace Jh.Core.Results.Generic
     public partial class Result<T> //: Result
     {
         #region Default Constructor
-        private Result() { }
-        private Result(T value) { }
-        public bool IsSuccess { get; private set; }
+        private Result()
+        {
+            IsSuccess = true;
+        }
+        private Result(T value) : this()
+        {
+        }
+        public bool IsSuccess { get; private set; } = true;
         public bool IsFailed => !IsSuccess;
 
         private T _value;
@@ -21,14 +27,15 @@ namespace Jh.Core.Results.Generic
             _value = value;
         }
 
-        readonly Dictionary<Type, List<object>> objList = new Dictionary<Type, List<object>>();
+        readonly Dictionary<Type, object> objList = new Dictionary<Type, object>();
 
         private T GetObject<T>()
         {
             var tip = typeof(T);
             if (objList.ContainsKey(tip))
             {
-                return GetObjects<T>(objList[tip]);
+                return (T)objList[tip];
+                //return GetObjects<T>(objList[tip]);
             }
             return default;
 
@@ -53,10 +60,24 @@ namespace Jh.Core.Results.Generic
             }
             else
             {
-                exist.Value.Add(value);
+
+                //exist.Value.Add(value);
             }
         }
-
+        private Dictionary<string, object> _data;
+        public void SetObject(string name, object obj)
+        {
+            _data ??= new Dictionary<string, object>();
+            _data[name] = obj;
+        }
+        public object GetObject(string name)
+        {
+            return _data[name];
+        }
+        public TValue GetObject<TValue>(string name)
+        {
+            return (TValue)_data[name];
+        }
         private bool IsChecked
         {
             get
@@ -90,6 +111,7 @@ namespace Jh.Core.Results.Generic
         {
             return result.Value;
         }
+
 
     }
 }

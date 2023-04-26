@@ -62,9 +62,9 @@ namespace Jh.Web.WebResults
 
         public WebResult(Exception exception)
         {
-            if (exception is FrameException)
+            if (exception is FrameException exception1)
             {
-                ParseError((FrameException)exception);
+                ParseError(exception1);
                 return;
             }
             ParseError(exception);

@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
@@ -17,7 +18,9 @@ namespace Jh.Core.Results.Generic
 
         public IErrorStage<T> OnError(Action<Result<T>, FrameException> action)
         {
-            action(this, Error);
+            if (this.IsFailed)
+                action(this, Error);
+
             return this;
         }
 

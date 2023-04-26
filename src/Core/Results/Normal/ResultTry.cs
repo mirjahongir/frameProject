@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using Jh.Core.Interfaces.Stages.Normal;
 
 namespace Jh.Core.Results.Normal
@@ -44,9 +46,25 @@ namespace Jh.Core.Results.Normal
             if (IsCheck) return this;
             try
             {
-                _first = method(this);
+                var model = method(this);
+                SetObject(model);
                 return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
+        }
 
+        public ISuccessStage StartTry<T>(Func<Result, Task<T>> method)
+        {
+            if (IsCheck) return this;
+            try
+            {
+                var model = method(this).Result;
+                SetObject(model);
+                return this;
             }
             catch (Exception ext)
             {

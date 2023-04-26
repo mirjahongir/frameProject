@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Normal;
 
@@ -38,7 +40,6 @@ namespace Jh.Core.Results.Normal
                 return this;
             }
         }
-
         public ISuccessStage OnNext(Action action)
         {
             if (IsCheck) return this;
@@ -72,7 +73,23 @@ namespace Jh.Core.Results.Normal
             if (IsCheck) return this;
             try
             {
-                _first = method(this);
+                var model = method(this);
+                SetObject<T>(model);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
+        }
+        public ISuccessStageWithParam OnNext<T>(Func<Result, Task<T>> method)
+        {
+            if (IsCheck) return this;
+            try
+            {
+                var model = method(this).Result;
+                SetObject<T>(model);
                 return this;
             }
             catch (Exception ext)
@@ -86,7 +103,25 @@ namespace Jh.Core.Results.Normal
             if (IsCheck) return this;
             try
             {
-                (_first, _second) = method(this);
+                var (model, second) = method(this);
+                SetObject<T>(model);
+                SetObject<T1>(second);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
+        }
+        public ISuccessStageWithParam OnNext<T, T1>(Func<Result, Task<Tuple<T, T1>>> method)
+        {
+            if (IsCheck) return this;
+            try
+            {
+                var (model, second) = method(this).Result;
+                SetObject<T>(model);
+                SetObject<T1>(second);
                 return this;
             }
             catch (Exception ext)

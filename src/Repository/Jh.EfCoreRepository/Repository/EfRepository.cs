@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 using Jh.Core.Interfaces.Repository;
 using Jh.EfCoreRepository.Interfaces;
 
@@ -33,14 +34,14 @@ namespace Jh.EfCoreRepository.Repository
         }
         #endregion
         #region Add
-        public virtual async ValueTask AddAsync(T model, CancellationToken? token)
+        public virtual async ValueTask AddAsync(T model, CancellationToken? token=null)
         {
             if (CheckCancelToken(token)) return;
             Table.Add(model);
             SaveChange();
         }
 
-        public virtual async ValueTask AddRangeAsync(IEnumerable<T> models, CancellationToken? token)
+        public virtual async ValueTask AddRangeAsync(IEnumerable<T> models, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.AddRange(models);
@@ -49,19 +50,19 @@ namespace Jh.EfCoreRepository.Repository
         #endregion
 
         #region Query
-        public virtual async ValueTask<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken? token)
+        public virtual async ValueTask<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
             return Table.Where(predicate);
         }
 
-        public virtual async ValueTask<T> GetAsync(TKey id, CancellationToken? token)
+        public virtual async ValueTask<T> GetAsync(TKey id, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
             return Table.Find(id);
         }
 
-        public virtual async ValueTask<IQueryable<T>> GetAllAsync(CancellationToken? token)
+        public virtual async ValueTask<IQueryable<T>> GetAllAsync(CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
             return Table;
@@ -69,14 +70,14 @@ namespace Jh.EfCoreRepository.Repository
         #endregion 
 
         #region Remove
-        public virtual async ValueTask RemoveAsync(T model, CancellationToken? token)
+        public virtual async ValueTask RemoveAsync(T model, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.Remove(model);
             SaveChange();
         }
 
-        public virtual async ValueTask<T> RemoveAsync(TKey id, CancellationToken? token)
+        public virtual async ValueTask<T> RemoveAsync(TKey id, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
 
@@ -86,7 +87,7 @@ namespace Jh.EfCoreRepository.Repository
             return model;
         }
 
-        public virtual async ValueTask RemoveRangeAsync(IEnumerable<T> models, CancellationToken? token)
+        public virtual async ValueTask RemoveRangeAsync(IEnumerable<T> models, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.RemoveRange(models);
@@ -95,7 +96,7 @@ namespace Jh.EfCoreRepository.Repository
         #endregion
 
         #region Update
-        public virtual async ValueTask UpdateAsync(T model, CancellationToken? token)
+        public virtual async ValueTask UpdateAsync(T model, CancellationToken? token = null)
         {
 
             if (CheckCancelToken(token)) return;
@@ -104,5 +105,37 @@ namespace Jh.EfCoreRepository.Repository
             SaveChange();
         }
         #endregion
+
+        public void RunSql(string sql, CancellationToken? token = null, params object[] param)
+        {
+            if (CheckCancelToken(token)) return;
+            Context.Database.ExecuteSqlRaw(sql, param);
+        }
+        public IQueryable<T1> SqlQuery<T1>(FormattableString str, CancellationToken? token = null)
+        {
+            if (CheckCancelToken(token)) throw new ArgumentNullException(nameof(token));
+            return Context.Database.SqlQuery<T1>(str);
+        }
+        public Tuple<bool, Exception> RunTransaction(Func<DbContext, DbSet<T>, bool> func, CancellationToken? token = null)
+        {
+            try
+            {
+                CheckCancelToken(token);
+                using var transaction = Context.Database.BeginTransaction();
+                var result = func(Context, Table);
+                if (result)
+                {
+                    SaveChange();
+                    transaction.Commit();
+                }
+                return new Tuple<bool, Exception>(result, null);
+            }
+            catch (Exception ext)
+            {
+                Console.WriteLine(ext.Message);
+                return new Tuple<bool, Exception>(false, ext);
+            }
+
+        }
     }
 }
