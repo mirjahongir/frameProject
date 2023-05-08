@@ -1,12 +1,10 @@
 ﻿using System;
-
 using Jh.Core.Errors;
-using Jh.Core.Interfaces.Stages.Normal;
 using Jh.Core.Results.Generic;
 
 namespace Jh.Core.Interfaces.Stages.Generic
 {
-    public interface ISuccessStage<T>
+    public interface ISuccessStage<T>: IErrorStage<T>
     {
         #region
         ISuccessStage<T> OnNext(Action action);

@@ -28,6 +28,13 @@ namespace Jh.CoreTest
                  });
 
         }
+        //public async Task StartTest()
+        //{
+        //    Result<Company>.Create(new Company())
+        //        .OnEach(m => { })
+        //        .StartTry1(async m=> await GenerateUser(m.Value))
+                
+        //}
         [Fact]
         public async Task AsyncTest()
         {

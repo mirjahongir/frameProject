@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,19 +43,19 @@ namespace Jh.MongoDbRepository.Repository
         }
         public bool CheckToken(CancellationToken? token = null)
         {
-            if(token.HasValue && token.GetValueOrDefault().IsCancellationRequested)
+            if (token.HasValue && token.GetValueOrDefault().IsCancellationRequested)
             {
                 return true;
             }
             return false;
         }
+        #region Add
         public async ValueTask AddAsync(T model, CancellationToken? token = null)
         {
             CheckAndAddId(model);
             _db.InsertOne(model);
 
         }
-
         public async ValueTask AddRangeAsync(System.Collections.Generic.IEnumerable<T> models, CancellationToken? token = null)
         {
             foreach (var i in models)
@@ -61,23 +64,30 @@ namespace Jh.MongoDbRepository.Repository
 
 
         }
-
-
+        #endregion
+        #region Find ...
         public async ValueTask<IQueryable<T>> FindAsync(System.Linq.Expressions.Expression<System.Func<T, bool>> predicate, CancellationToken? token = null)
         {
             return _db.AsQueryable<T>().Where(predicate);
         }
-
+        public IQueryable<T> Find(Expression<Func<T, bool>> predicate, CancellationToken? token = null)
+        {
+            return _db.AsQueryable<T>().Where(predicate);
+        }
         public async ValueTask<System.Linq.IQueryable<T>> GetAllAsync(CancellationToken? token)
         {
             return await FindAsync(m => true, token);
         }
-
         public async ValueTask<T> GetAsync(string id, CancellationToken? token = null)
         {
             return _db.Find(m => m.Id == id).FirstOrDefault();
         }
-
+        public T Get(string id)
+        {
+            return _db.Find(m => m.Id == id).FirstOrDefault();
+        }
+        #endregion
+        #region Remove...
         public async ValueTask RemoveAsync(T model, CancellationToken? token = null)
         {
             _db.DeleteOne(m => m.Id == model.Id);
@@ -100,11 +110,16 @@ namespace Jh.MongoDbRepository.Repository
             }
             return default;
         }
-
+        #endregion
+        #region Update ...
         public ValueTask UpdateAsync(T model, CancellationToken? token = null)
         {
             _db.FindOneAndReplace(m => m.Id == model.Id, model);
             return default;
         }
+
+       
+        #endregion
+
     }
 }

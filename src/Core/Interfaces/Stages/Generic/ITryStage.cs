@@ -11,8 +11,7 @@ namespace Jh.Core.Interfaces.Stages.Generic
         ISuccessStageWithParam<T> StartTry(Action action);
         ISuccessStageWithParam<T> StartTry<T1>(Func<Result<T>, T1> method);
         ISuccessStageWithParam<T> StartTry<T1>(Func<Result<T>, Task<T1>> method);
-
-
+      
 
     }
 

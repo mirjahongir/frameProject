@@ -83,6 +83,10 @@ namespace Jh.Web.WebResults
 
         }
         public List<ErrorModal> Errors { get; set; }
+        public static implicit operator WebResult<T>(Exception ext)
+        {
+            return new WebResult<T>(ext);
+        }
 
     }
 }

@@ -10,9 +10,11 @@ namespace Jh.Core.Interfaces.Repository
     public interface IRepository<T, TKey>
         where T : class, IEntity<TKey>
     {
-        ValueTask<T> GetAsync(TKey id, CancellationToken? token=null);
+        T Get(TKey id);
+        ValueTask<T> GetAsync(TKey id, CancellationToken? token = null);
         ValueTask<IQueryable<T>> GetAllAsync(CancellationToken? token = null);
         ValueTask<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken? token = null);
+        IQueryable<T> Find(Expression<Func<T, bool>> predicate, CancellationToken? token = null);
         ValueTask AddAsync(T model, CancellationToken? token = null);
         ValueTask AddRangeAsync(IEnumerable<T> models, CancellationToken? token = null);
         ValueTask RemoveAsync(T model, CancellationToken? token = null);

@@ -8,7 +8,7 @@ namespace Jh.Core.Results.Generic
 {
     public partial class Result<T> : ISuccessStage<T>
     {
-        private FrameException Error { get; }
+        public FrameException Error { get; private set; }
         #region
         public IErrorStage<T> OnError(Action action)
         {

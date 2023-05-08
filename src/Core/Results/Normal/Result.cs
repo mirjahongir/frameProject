@@ -18,7 +18,7 @@ namespace Jh.Core.Results.Normal
             get { return new Result(); }
 
         }
-        internal FrameException? Error { get; private set; }
+        public FrameException? Error { get; private set; }
         private object _first { get; set; }
         private object _second { get; set; }
 
@@ -28,6 +28,17 @@ namespace Jh.Core.Results.Normal
         }
         private Dictionary<string, object> _data = new Dictionary<string, object>();
         private readonly Dictionary<string, object> privateData = new Dictionary<string, object>();
+        private T GetObject<T>()
+          
+        {
+            var name = nameof(T).ToLower();
+            if (privateData.ContainsKey(name))
+            {
+                return (T)privateData[name];
+            }
+            return default;
+
+        }
         private void SetObject<T>(T model)
         {
             var name = nameof(T).ToLower();

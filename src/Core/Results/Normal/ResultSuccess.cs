@@ -130,6 +130,14 @@ namespace Jh.Core.Results.Normal
                 return this;
             }
         }
+
+
+        public ISuccessStage OnNext<T, T1>(Action<Result, Tuple<T, T1>> method)
+        {
+            throw new NotImplementedException();
+        }
+
+     
     }
 
 }

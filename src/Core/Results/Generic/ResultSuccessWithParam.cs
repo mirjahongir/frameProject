@@ -51,7 +51,7 @@ namespace Jh.Core.Results.Generic
             {
                 return ParseError(ex);
             }
-        } 
+        }
 
         #region Func<Result<T>, T1, T2, Tuple<T1, T2>>
         public ISuccessStageWithParam<T> OnNext<T1, T2>(Func<Result<T>, T1, T2, Tuple<T1, T2>> method)
@@ -148,6 +148,38 @@ namespace Jh.Core.Results.Generic
                 var model = GetObject<T1>();
                 model = method(this, model).Result;
                 SetObject<T1>(model);
+                return this;
+            }
+            catch (Exception ex)
+            {
+                return ParseError(ex);
+            }
+        }
+
+        public ISuccessStageWithParam<T> OnNext<T1, T2>(Func<Result<T>, T1, T2> method)
+        {
+            if (IsChecked) return this;
+            try
+            {
+                var model = GetObject<T1>();
+                var second = method(this, model);
+                SetObject<T2>(second);
+                return this;
+            }
+            catch (Exception ex)
+            {
+                return ParseError(ex);
+            }
+        }
+
+        public ISuccessStageWithParam<T> OnNext<T1, T2>(Func<Result<T>, T1, Task<T2>> method)
+        {
+            if (IsChecked) return this;
+            try
+            {
+                var model = GetObject<T1>();
+                var second = method(this, model).Result;
+                SetObject<T2>(second);
                 return this;
             }
             catch (Exception ex)

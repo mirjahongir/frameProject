@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Jh.Core.Interfaces.Stages.Generic;
 
 namespace Jh.Core.Results.Generic
@@ -50,13 +49,12 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
-
         public ISuccessStageWithParam<T> StartTry<T1>(Func<Result<T>, Task<T1>> method)
         {
             if (IsChecked) return this;
             try
             {
-                var model = method.Invoke(this).Result;
+                var model =  method.Invoke(this).Result;
                 if (model == null) return this;
                 objList.Add(model.GetType(), model);
                 return this;
@@ -66,6 +64,8 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
+
+        
     }
 
 }

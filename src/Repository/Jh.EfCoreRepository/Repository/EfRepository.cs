@@ -33,6 +33,7 @@ namespace Jh.EfCoreRepository.Repository
             return false;
         }
         #endregion
+
         #region Add
         public virtual async ValueTask AddAsync(T model, CancellationToken? token=null)
         {
@@ -61,11 +62,20 @@ namespace Jh.EfCoreRepository.Repository
             if (CheckCancelToken(token)) return null;
             return Table.Find(id);
         }
-
+        public T Get(TKey id)
+        {
+            return Table.Find(id);
+        }
         public virtual async ValueTask<IQueryable<T>> GetAllAsync(CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
             return Table;
+        }
+        public IQueryable<T> Find(Expression<Func<T, bool>> predicate, CancellationToken? token = null)
+        {
+
+            if (CheckCancelToken(token)) return null;
+            return Table.Where(predicate);
         }
         #endregion 
 
@@ -137,5 +147,7 @@ namespace Jh.EfCoreRepository.Repository
             }
 
         }
+
+        
     }
 }

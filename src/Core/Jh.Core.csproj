@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\ViewModels\" />
+    <Folder Include="ViewModels\Queries\Result\" />
   </ItemGroup>
 
 </Project>

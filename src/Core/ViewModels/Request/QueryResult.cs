@@ -1,11 +1,13 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Jh.Core.ViewModels.Result
+namespace Jh.Core.ViewModels.Request
 {
-    public class QueryResult<T>
+    public interface IQueryResult<T>
     {
+        public bool IsSuccess { get; set; }
         public long Count { get; set; }
         public List<T> Data { get; set; }
     }
+
 }

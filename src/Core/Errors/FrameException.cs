@@ -3,11 +3,15 @@ namespace Jh.Core.Errors
 {
     public class FrameException : System.Exception
     {
-        public int? Code { get;  }
+        public int? Code { get; }
         public int? Status { get; }
         public int? LineNumber { get; internal set; }
         public string? FileName { get; internal set; }
-        public FrameException(string message):base(message) { }
+        public FrameException(int code, string message) : this(message, code)
+        {
+
+        }
+        public FrameException(string message) : base(message) { }
         public FrameException(string message, int code) : base(message)
         {
             Code = code;
@@ -26,7 +30,7 @@ namespace Jh.Core.Errors
         }
         public FrameException(string message, string fileName, int lineNumber) : base(message)
         {
-            FileName=fileName;
+            FileName = fileName;
 
         }
         public FrameException(string message, int code, string fileName, int lineNumber) : this(message,
