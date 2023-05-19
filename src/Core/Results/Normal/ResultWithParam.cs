@@ -10,6 +10,11 @@ namespace Jh.Core.Results.Normal
     /// </summary>
     public partial class Result : ISuccessStageWithParam
     {
+        public Result Finally<T>(Action<Result, T> method)
+        {
+            throw new NotImplementedException();
+        }
+
         public ISuccessStage OnNext<T>(Action<Result, T> method)
         {
             if (IsCheck) return this;
@@ -164,6 +169,16 @@ namespace Jh.Core.Results.Normal
                 ParseError(ext);
                 return this;
             }
+        }
+
+        public ISuccessStageWithParam OnNext<T, T1>(Func<Result, T, Task<T1>> method)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISuccessStage OnNext<T, T1>(Task<Action<Result, T, T1>> method)
+        {
+            throw new NotImplementedException();
         }
     }
 }

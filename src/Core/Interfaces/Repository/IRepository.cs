@@ -21,6 +21,7 @@ namespace Jh.Core.Interfaces.Repository
         ValueTask<T> RemoveAsync(TKey id, CancellationToken? token = null);
         ValueTask RemoveRangeAsync(IEnumerable<T> models, CancellationToken? token = null);
         ValueTask UpdateAsync(T model, CancellationToken? token = null);
+        ValueTask UpdateRangeAsync(IEnumerable<T> models);
     }
 
 

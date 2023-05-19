@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Jh.EfCoreRepository.Interfaces;
+using Jh.EfCoreRepository.Repository;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Jh.EfCoreRepository
 {
-    public class Start
+    public static class Start
     {
-        public static void Build(IServiceCollection collection)
+        public static void RegisterEntityRepository(this IServiceCollection collection)
         {
-
+            collection.AddScoped(typeof(IEntityRepository<,>), typeof(EfRepository<,>));
         }
     }
 }

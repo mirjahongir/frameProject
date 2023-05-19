@@ -2,8 +2,8 @@
 
 namespace Jh.EfCoreRepository.Interfaces
 {
-    public interface IDataContext
-    {
-        public DbContext Context { get; }
-    }
+    //public interface IDataContext
+    //{
+    //    public DbContext Context { get; }
+    //}
 }

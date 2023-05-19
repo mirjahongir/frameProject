@@ -114,6 +114,24 @@ namespace Jh.Core.Results.Normal
                 return this;
             }
         }
+        public ISuccessStage OnNext<T, T1>(Action<Result, T, T1> method)
+        {
+            if (IsCheck) return this;
+            try
+            {
+                var getFirstObject = GetObject<T>();
+                var secondObject = GetObject<T1>();
+                method(this, getFirstObject, secondObject);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
+
+
+        }
         public ISuccessStageWithParam OnNext<T, T1>(Func<Result, Task<Tuple<T, T1>>> method)
         {
             if (IsCheck) return this;
@@ -132,12 +150,6 @@ namespace Jh.Core.Results.Normal
         }
 
 
-        public ISuccessStage OnNext<T, T1>(Action<Result, Tuple<T, T1>> method)
-        {
-            throw new NotImplementedException();
-        }
-
-     
     }
 
 }

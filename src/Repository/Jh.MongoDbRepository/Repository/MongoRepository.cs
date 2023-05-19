@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -118,7 +119,18 @@ namespace Jh.MongoDbRepository.Repository
             return default;
         }
 
-       
+        public async ValueTask UpdateRangeAsync(IEnumerable<T> models)
+        {
+            var data = new List<WriteModel<T>>();
+            foreach (var i in models)
+            {
+                data.Add(new ReplaceOneModel<T>(i.Id, i));
+            }
+            await _db.BulkWriteAsync(data, new BulkWriteOptions() { IsOrdered = false });
+
+        }
+
+
         #endregion
 
     }

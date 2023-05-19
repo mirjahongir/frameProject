@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Jh.Core.Errors;
 using Jh.Web.Models;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace Jh.Web.WebResults
 {
     /// <summary>
@@ -30,6 +32,10 @@ namespace Jh.Web.WebResults
             this.HttpStatus = model.HttpStatus;
             this.IsSuccess = model.IsSuccess;
             this.Code = model.Code;
+        }
+        public WebResult(ModelStateDictionary modelState)
+        {
+
         }
         #endregion
 

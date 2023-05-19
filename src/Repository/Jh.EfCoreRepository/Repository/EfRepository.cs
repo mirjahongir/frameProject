@@ -11,9 +11,9 @@ namespace Jh.EfCoreRepository.Repository
         where T : class, IEntity<TKey>
         where TKey : struct
     {
-        public EfRepository(IDataContext context)
+        public EfRepository(DbContext context)
         {
-            Context = context.Context;
+            Context = context;
             Table = Context.Set<T>();
         }
 
@@ -112,6 +112,12 @@ namespace Jh.EfCoreRepository.Repository
             if (CheckCancelToken(token)) return;
             Context.Entry(model).State = EntityState.Modified;
             Table.Update(model);
+            SaveChange();
+        }
+        public virtual async ValueTask UpdateRangeAsync(IEnumerable<T> models)
+        {
+            Context.Entry(models).State = EntityState.Modified;
+            Table.UpdateRange(models);
             SaveChange();
         }
         #endregion

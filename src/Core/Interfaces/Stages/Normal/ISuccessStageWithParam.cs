@@ -15,6 +15,7 @@ namespace Jh.Core.Interfaces.Stages.Normal
         ISuccessStageWithParam OnNext<T, T1>(Func<Result, T, T1, T> method);
         ISuccessStageWithParam OnNext<T, T1>(Func<Result, T, T1, Task<T>> method);
         ISuccessStageWithParam OnNext<T, T1>(Func<Result, T, T1, Tuple<T, T1>> method);
+        ISuccessStageWithParam OnNext<T,T1>(Func<Result,T, Task<T1>>method);
         ISuccessStageWithParam OnNext<T, T1>(Func<Result, T, T1, Task<Tuple<T, T1>>> method);
 
     }
