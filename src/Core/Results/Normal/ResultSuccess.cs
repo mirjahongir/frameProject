@@ -313,8 +313,20 @@ namespace Jh.Core.Results.Normal
             throw new NotImplementedException();
         }
 
-       
+        public ISuccessStage OnNextAsync<T>(Func<Result, Task> result)
+        {
+            throw new NotImplementedException();
+        }
 
+        public ISuccessStage OnNextAsync<T>(Func<Result, T, Task> method)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISuccessStage OnNextAsync<T, T1>(Func<Result, T, T1, Task> method)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

@@ -1,12 +1,11 @@
 ﻿using System;
-
 using Jh.Core.Results.Normal;
 
 namespace Jh.Core.Interfaces.Stages.Normal
 {
     public interface IErrorStage
     {
-        //Result Result { get; }
+        
         Result Finally(Action action);
         Result Finally(Action<Result> action);
         T Finally<T>(Func<Result, T> method);

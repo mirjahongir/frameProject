@@ -170,7 +170,7 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
-        public ISuccessStage<T> OnNext<T1, T2>(Func<Result<T>, T1, T2, Task<Tuple<T1, T2>>> method)
+        public ISuccessStage<T> OneNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task<Tuple<T1, T2>>> method)
         {
             if (IsChecked) return this;
             try
@@ -205,7 +205,7 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
-        public ISuccessStage<T> OnNext<T1, T2>(Func<Result<T>, T1, T2, Task<T1>> method)
+        public ISuccessStage<T> OneNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task<T1>> method)
         {
             if (IsChecked) return this;
             try
@@ -239,7 +239,7 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
-        public ISuccessStage<T> OnNext<T1>(Func<Result<T>, T1, Task<T1>> method)
+        public ISuccessStage<T> OneNextAsync<T1>(Func<Result<T>, T1, Task<T1>> method)
         {
             if (IsChecked) return this;
             try
@@ -271,7 +271,7 @@ namespace Jh.Core.Results.Generic
             }
         }
 
-        public ISuccessStage<T> OnNext<T1, T2>(Func<Result<T>, T1, Task<T2>> method)
+        public ISuccessStage<T> OneNextAsync<T1, T2>(Func<Result<T>, T1, Task<T2>> method)
         {
             if (IsChecked) return this;
             try
@@ -287,18 +287,19 @@ namespace Jh.Core.Results.Generic
             }
         }
 
-        public ISuccessStage<T> OnNext<T1>(Task<Action<Result<T>>> method)
+        public ISuccessStage<T> OnNext<T1>(Func<Result<T>, T1> method)
         {
-            if (IsChecked) return this;
-            try
-            {
-                method.Wait();
-                return this;
-            }
-            catch (Exception ext)
-            {
-                return ParseError(ext);
-            }
+            throw new NotImplementedException();
+        }
+
+        public ISuccessStage<T> OnNextAsync<T1>(Func<Result<T>, T1, Task> method)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task> method)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }
