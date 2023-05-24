@@ -15,6 +15,7 @@ namespace Jh.Core.Results.Generic
         }
         private Result(T value) : this()
         {
+            SetValue(value);
         }
         public bool IsSuccess { get; private set; } = true;
         public bool IsFailed => !IsSuccess;

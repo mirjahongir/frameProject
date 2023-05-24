@@ -6,7 +6,7 @@ namespace Jh.Core.Results.Generic
 {
     public partial class Result<T> : ITryStage<T>
     {
-        public ISuccessStageWithParam<T> StartTry(Action<Result<T>> action)
+        public ISuccessStage<T> StartTry(Action<Result<T>> action)
         {
             if (IsChecked) return this;
             try
@@ -20,7 +20,7 @@ namespace Jh.Core.Results.Generic
             }
         }
 
-        public ISuccessStageWithParam<T> StartTry<T1>(Func<Result<T>, T1> method)
+        public ISuccessStage<T> StartTry<T1>(Func<Result<T>, T1> method)
         {
             if (IsChecked) return this;
             try
@@ -36,7 +36,7 @@ namespace Jh.Core.Results.Generic
             }
         }
 
-        public ISuccessStageWithParam<T> StartTry(Action action)
+        public ISuccessStage<T> StartTry(Action action)
         {
             if (IsChecked) return this;
             try
@@ -49,7 +49,7 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
-        public ISuccessStageWithParam<T> StartTry<T1>(Func<Result<T>, Task<T1>> method)
+        public ISuccessStage<T> StartTry<T1>(Func<Result<T>, Task<T1>> method)
         {
             if (IsChecked) return this;
             try

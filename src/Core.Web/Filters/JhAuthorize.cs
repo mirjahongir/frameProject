@@ -49,14 +49,6 @@ namespace Jh.Web.Filters
         public async Task OnActionExecutionAsync(ActionExecutingContext context,
             ActionExecutionDelegate next)
         {
-
-            if (!context.ModelState.IsValid)
-            {
-                await NotValid(context);
-                return;
-            }
-
-
             foreach (KeyValuePair<string, object> actionArguments in context.ActionArguments)
             {
                 var value = actionArguments.Value;
@@ -64,8 +56,14 @@ namespace Jh.Web.Filters
                 SearchByProperty(context, value, valueType);
                 CheckAuthModel(context, value, valueType);
             }
+
+
+            if (!context.ModelState.IsValid)
+            {
+                await NotValid(context);
+                return;
+            }
             await next();
-            return;
         }
         public void SetUserInfo(PropertyInfo userInfo, ActionExecutingContext context, object obj)
         {

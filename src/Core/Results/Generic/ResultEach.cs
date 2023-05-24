@@ -27,7 +27,7 @@ namespace Jh.Core.Results.Generic
         private void Each()
         {
             _each?.Invoke();
-            _eachModel.Invoke(this);
+            _eachModel?.Invoke(this);
         }
     }
 }

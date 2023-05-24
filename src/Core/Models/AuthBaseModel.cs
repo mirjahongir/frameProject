@@ -5,7 +5,7 @@ namespace Jh.Core.Models
     public interface AuthBaseModel<T> where T : class
     {
         [UserInfo]
-        T UserInfo { get; set; }
+        T? UserInfo { get; set; }
 
     }
 }

@@ -33,8 +33,7 @@ namespace Jh.Web.Startup
              .AddNewtonsoftJson(m =>
              {
                  m.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-             })
-             .AddFluentValidation();
+             });
         }
         public static void DefaultServices(this IServiceCollection services)
         {
