@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Threading.Tasks;
 using Jh.Core.Interfaces.Stages.Normal;
 
 namespace Jh.Core.Results.Normal
@@ -26,6 +26,12 @@ namespace Jh.Core.Results.Normal
             var firsModel = GetFirstModel<T>();
 
             return method(this, firsModel);
+        }
+        public T2 Finally<T, T2>(Func<Result, T, Task<T2>> method)
+        {
+            var firsModel = GetFirstModel<T>();
+
+            return method(this, firsModel).Result;
         }
 
         public T3 Finally<T, T2, T3>(Func<Result, T, T2, T3> method)

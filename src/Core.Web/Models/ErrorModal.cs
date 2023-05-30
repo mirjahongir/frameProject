@@ -3,6 +3,11 @@ namespace Jh.Web.Models
 {
     public class ErrorModal
     {
+        public ErrorModal() { }
+        public ErrorModal(string message)
+        {
+            Message = message;
+        }
         public int Code { get; set; }
         public string Message { get; set; }
         public string Link { get; set; }

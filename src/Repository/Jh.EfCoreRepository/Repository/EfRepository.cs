@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-
 using Jh.Core.Interfaces.Repository;
 using Jh.EfCoreRepository.Interfaces;
 
@@ -7,20 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jh.EfCoreRepository.Repository
 {
-    public class EfRepository<T, TKey> : IEntityRepository<T, TKey>
+    public class EfRepository<T, TKey> : IEntityRepository<T, TKey>//, IDisposable
         where T : class, IEntity<TKey>
         where TKey : struct
     {
         public EfRepository(DbContext context)
         {
             Context = context;
+            var name = typeof(T).Name;
+
             Table = Context.Set<T>();
         }
 
         #region
         DbContext Context;
         protected DbSet<T> Table { get; }
-        public void SaveChange()
+
+        public void SaveChanges()
         {
             Context.SaveChanges();
         }
@@ -35,18 +37,18 @@ namespace Jh.EfCoreRepository.Repository
         #endregion
 
         #region Add
-        public virtual async ValueTask AddAsync(T model, CancellationToken? token=null)
+        public virtual void Add(T model, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.Add(model);
-            SaveChange();
+            SaveChanges();
         }
 
-        public virtual async ValueTask AddRangeAsync(IEnumerable<T> models, CancellationToken? token = null)
+        public virtual void AddRange(IEnumerable<T> models, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.AddRange(models);
-            SaveChange();
+            SaveChanges();
         }
         #endregion
 
@@ -80,45 +82,47 @@ namespace Jh.EfCoreRepository.Repository
         #endregion 
 
         #region Remove
-        public virtual async ValueTask RemoveAsync(T model, CancellationToken? token = null)
+        public virtual void Remove(T model, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.Remove(model);
-            SaveChange();
+            SaveChanges();
         }
 
-        public virtual async ValueTask<T> RemoveAsync(TKey id, CancellationToken? token = null)
+        public virtual T Remove(TKey id, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return null;
 
-            var model = await GetAsync(id, token);
+            var model = GetAsync(id, token).Result;
             Table.Remove(model);
-            SaveChange();
+            SaveChanges();
             return model;
         }
 
-        public virtual async ValueTask RemoveRangeAsync(IEnumerable<T> models, CancellationToken? token = null)
+        public virtual void RemoveRange(IEnumerable<T> models, CancellationToken? token = null)
         {
             if (CheckCancelToken(token)) return;
             Table.RemoveRange(models);
-            SaveChange();
+            SaveChanges();
+
         }
         #endregion
 
         #region Update
-        public virtual async ValueTask UpdateAsync(T model, CancellationToken? token = null)
+        public virtual void Update(T model, CancellationToken? token = null)
         {
 
             if (CheckCancelToken(token)) return;
             Context.Entry(model).State = EntityState.Modified;
             Table.Update(model);
-            SaveChange();
+            SaveChanges();
+
         }
-        public virtual async ValueTask UpdateRangeAsync(IEnumerable<T> models)
+        public virtual void UpdateRange(IEnumerable<T> models)
         {
             Context.Entry(models).State = EntityState.Modified;
             Table.UpdateRange(models);
-            SaveChange();
+            SaveChanges();
         }
         #endregion
 
@@ -141,7 +145,7 @@ namespace Jh.EfCoreRepository.Repository
                 var result = func(Context, Table);
                 if (result)
                 {
-                    SaveChange();
+
                     transaction.Commit();
                 }
                 return new Tuple<bool, Exception>(result, null);
@@ -151,9 +155,6 @@ namespace Jh.EfCoreRepository.Repository
                 Console.WriteLine(ext.Message);
                 return new Tuple<bool, Exception>(false, ext);
             }
-
         }
-
-        
     }
 }

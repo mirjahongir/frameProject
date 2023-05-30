@@ -11,6 +11,7 @@ namespace Jh.EfCoreRepository.Interfaces
         void RunSql(string sql, CancellationToken? token = null, params object[] param);
         IQueryable<T1> SqlQuery<T1>(FormattableString str, CancellationToken? token = null);
         Tuple<bool, Exception> RunTransaction(Func<DbContext, DbSet<T>, bool> func, CancellationToken? token = null);
+        void SaveChanges();
     }
 
 }

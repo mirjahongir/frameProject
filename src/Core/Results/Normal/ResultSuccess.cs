@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Normal;
 
@@ -149,7 +150,18 @@ namespace Jh.Core.Results.Normal
         }
         public Result Finally<T>(Action<Result, T> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                var second = GetObject<T>();
+                method.Invoke(this, second);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
 
         public ISuccessStage OnNext<T>(Action<Result, T> method)
@@ -310,22 +322,67 @@ namespace Jh.Core.Results.Normal
 
         public ISuccessStage OnNextAsync<T, T1>(Func<Result, T, Task<T1>> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                var first = GetObject<T>();
+                var second = method(this, first).Result;
+                SetObject<T1>(second);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
 
-        public ISuccessStage OnNextAsync<T>(Func<Result, Task> result)
+        public ISuccessStage OnNextAsync<T>(Func<Result, Task> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                method(this).Wait();
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
 
         public ISuccessStage OnNextAsync<T>(Func<Result, T, Task> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                var first = GetObject<T>();
+                method(this, first).Wait();
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
 
         public ISuccessStage OnNextAsync<T, T1>(Func<Result, T, T1, Task> method)
         {
-            throw new NotImplementedException();
+            if (IsCheck) return this;
+            try
+            {
+                var first = GetObject<T>();
+                var second = GetObject<T1>();
+                method(this, first, second).Wait();
+                return this;
+            }
+            catch (Exception ext)
+            {
+                ParseError(ext);
+                return this;
+            }
         }
     }
 

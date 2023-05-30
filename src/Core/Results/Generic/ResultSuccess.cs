@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
@@ -8,7 +9,7 @@ namespace Jh.Core.Results.Generic
 {
     public partial class Result<T> : ISuccessStage<T>
     {
-        public FrameException Error { get; private set; }
+        public FrameException Error { get; private set; } = null;
         #region
         public IErrorStage<T> OnError(Action action)
         {
@@ -73,37 +74,80 @@ namespace Jh.Core.Results.Generic
 
         public ISuccessStage<T> OnNextAsync(Func<Result<T>, Task> method)
         {
-            throw new NotImplementedException();
-        }
-
-        public ISuccessStage<T> OnNextAsync(Task<Action<Result<T>>> method)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ISuccessStage<T> OnNextAsync<T1>(Action<Task<Result<T>>> method)
-        {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                method.Invoke(this).Wait();
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
         public ISuccessStage<T> OnNextAsync<T1>(Func<Result<T>, T1, Task<T1>> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var obj = GetObject<T1>();
+                obj = method.Invoke(this, obj).Result;
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
         public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task<Tuple<T1, T2>>> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var first = GetObject<T1>();
+                var second = GetObject<T2>();
+                (first, second) = method(this, first, second).Result;
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
         public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, Task<T2>> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var first = GetObject<T1>();
+                var second = method(this, first).Result;
+                SetObject<T2>(second);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
         public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task<T1>> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var first = GetObject<T1>();
+                var second = GetObject<T2>();
+                first = method(this, first, second).Result;
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
+
         }
         #endregion
         public ISuccessStage<T> OnNext<T1>(Action<Result<T>, T1> method)
@@ -221,6 +265,23 @@ namespace Jh.Core.Results.Generic
                 return ParseError(ex);
             }
         }
+        public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task> method)
+        {
+            if (IsChecked) return this;
+            try
+            {
+                var model = GetObject<T1>();
+                var second = GetObject<T2>();
+                method(this, model, second).Wait();
+
+                return this;
+            }
+            catch (Exception ex)
+            {
+                return ParseError(ex);
+            }
+
+        }
         #endregion
 
         #region Func<Result<T>, T1, T1>
@@ -289,18 +350,36 @@ namespace Jh.Core.Results.Generic
 
         public ISuccessStage<T> OnNext<T1>(Func<Result<T>, T1> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var obj = method(this);
+                SetObject<T1>(obj);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
         public ISuccessStage<T> OnNextAsync<T1>(Func<Result<T>, T1, Task> method)
         {
-            throw new NotImplementedException();
+            if (IsChecked) return this;
+            try
+            {
+                var model = GetObject<T1>();
+                method(this, model).Wait();
+                SetObject<T1>(model);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
         }
 
-        public ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task> method)
-        {
-            throw new NotImplementedException();
-        }
+
         #endregion
     }
 }

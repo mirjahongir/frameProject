@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-using Jh.Core.Errors;
+﻿using Jh.Core.Errors;
+using Jh.Core.ViewModels.Commands.Result;
 using Jh.Web.Models;
+using Jh.Web.Startup;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -16,9 +14,27 @@ namespace Jh.Web.WebResults
     public partial class WebResult<T>
         where T : class
     {
+        public void CheckEventResponce(T model)
+        {
+
+            if (model is IEventResult result)
+            {
+                IsSuccess = result.IsSuccess;
+            }
+
+            if (!IsSuccess)
+                SetStatus();
+
+
+        }
+        private static void SetStatus(int statusCode = 400)
+        {
+            JhAspExtensions.HttpContext.HttpContext.Response.StatusCode = 400;
+        }
         #region Default Constructor
         public WebResult(T model)
         {
+            CheckEventResponce(model);
             Result = model;
         }
         public WebResult(object model)
@@ -82,11 +98,20 @@ namespace Jh.Web.WebResults
         }
         public void ParseError(Exception exception)
         {
-
+            if (exception is FrameException exception2)
+            {
+                ParseError(exception2);
+                return;
+            }
+            Errors = new List<ErrorModal>()
+            {
+new ErrorModal(exception.Message){ }
+            };
+            SetStatus();
         }
         public void ParseError(FrameException exception)
         {
-
+            SetStatus();
         }
         public List<ErrorModal> Errors { get; set; }
         public static implicit operator WebResult<T>(Exception ext)

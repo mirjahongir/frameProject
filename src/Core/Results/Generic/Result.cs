@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
 namespace Jh.Core.Results.Generic
@@ -36,7 +37,7 @@ namespace Jh.Core.Results.Generic
             if (objList.ContainsKey(tip))
             {
                 return (T)objList[tip];
-                //return GetObjects<T>(objList[tip]);
+
             }
             return default;
 
@@ -57,13 +58,9 @@ namespace Jh.Core.Results.Generic
             var exist = objList.FirstOrDefault(m => m.Key == tip);
             if (exist.Key == null)
             {
-                objList.Add(tip, new List<object>() { value });
+                objList.Add(tip, value);
             }
-            else
-            {
 
-                //exist.Value.Add(value);
-            }
         }
         private Dictionary<string, object> _data;
         public void SetObject(string name, object obj)
@@ -90,6 +87,15 @@ namespace Jh.Core.Results.Generic
         }
         private Result<T> ParseError(Exception ext)
         {
+            if (ext is FrameException sd)
+            {
+                Error = sd;
+            }
+            else
+            {
+                Error = new FrameException(ext.Message);
+            }
+
             IsSuccess = false;
             return this;
         }
@@ -104,6 +110,37 @@ namespace Jh.Core.Results.Generic
         public static IEachStage<T> Create()
         {
             return new Result<T>();
+        }
+        public static ISuccessStage<T> Create(Func<T> method)
+        {
+            var result = new Result<T>();
+            try
+            {
+                var model = method.Invoke();
+                result.SetValue(model);
+                return result;
+            }
+            catch (Exception ext)
+            {
+                result.ParseError(ext);
+            }
+            return result;
+        }
+        public static ISuccessStage<T> Create(Func<Result<T>, T> method)
+        {
+            var result = new Result<T>();
+            try
+            {
+                var model = method.Invoke(result);
+                result.SetValue(model);
+                return result;
+            }
+            catch (Exception ext)
+            {
+                result.ParseError(ext);
+
+            }
+            return result;
         }
         #endregion
 

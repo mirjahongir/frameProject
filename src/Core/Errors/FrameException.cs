@@ -7,6 +7,8 @@ namespace Jh.Core.Errors
         public int? Status { get; }
         public int? LineNumber { get; internal set; }
         public string? FileName { get; internal set; }
+
+        public FrameException() { }
         public FrameException(int code, string message) : this(message, code)
         {
 
