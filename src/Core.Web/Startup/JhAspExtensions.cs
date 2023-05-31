@@ -1,6 +1,9 @@
 ﻿using System.Text;
+
 using FluentValidation.AspNetCore;
+
 using Jh.Web.Filters;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -46,8 +49,6 @@ namespace Jh.Web.Startup
         public static void FullConfigApp(this IApplicationBuilder app)
         {
             HttpContext = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
-            
-          
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
