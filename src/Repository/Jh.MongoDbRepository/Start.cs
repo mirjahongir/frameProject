@@ -9,7 +9,6 @@ namespace Jh.MongoDbRepository
         public static void RegisterMongoRepository(this IServiceCollection collection)
         {
             collection.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
-            //collection.AddScoped(typeof(MongoRepository<>), typeof(IMongoRepository<>));
         }
     }
 }

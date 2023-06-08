@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
@@ -81,7 +82,7 @@ namespace Jh.Core.Results.Generic
             }
             catch (AggregateException ext)
             {
-               var ee= ext.InnerException;
+                var ee = ext.InnerException;
                 return ParseError(ee);
             }
         }
@@ -172,7 +173,9 @@ namespace Jh.Core.Results.Generic
             {
                 var model = GetObject<T1>();
                 var seconModel = GetObject<T2>();
+                
                 method(this, model, seconModel);
+
                 return this;
             }
             catch (Exception ex)
@@ -371,6 +374,23 @@ namespace Jh.Core.Results.Generic
                 var model = GetObject<T1>();
                 method(this, model).Wait();
                 SetObject<T1>(model);
+                return this;
+            }
+            catch (Exception ext)
+            {
+                return ParseError(ext);
+            }
+        }
+
+        public ISuccessStage<T> OnNext<T1, T2, T3>(Func<Result<T>, T1, T2, T3> method)
+        {
+            if (IsChecked) return this;
+            try
+            {
+                var first = GetObject<T1>();
+                var second = GetObject<T2>();
+                var result = method(this, first, second);
+                SetObject<T3>(result);
                 return this;
             }
             catch (Exception ext)

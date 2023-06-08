@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Jh.Core.Errors;
 using Jh.Core.Results.Generic;
 

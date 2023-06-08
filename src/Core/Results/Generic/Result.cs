@@ -24,7 +24,18 @@ namespace Jh.Core.Results.Generic
 
         private T _value;
         public T Value => _value;
+        public void SetError(Exception ext)
+        {
+            if (ext is FrameException frame)
+            {
+                Error = frame;
+            }
+            else
+            {
+                Error = new FrameException(ext.Message);
+            }
 
+        }
         public void SetValue(T value)
         {
             _value = value;
@@ -52,6 +63,7 @@ namespace Jh.Core.Results.Generic
             {
                 objList.Add(tip, value);
             }
+            objList[tip] = value;
         }
 
         private Dictionary<string, object> _data;
