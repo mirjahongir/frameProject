@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Jh.Core.Interfaces.Stages.Normal;
+using Jh.Core.ViewModels;
 
 namespace Jh.Core.Results.Normal
 {
@@ -40,11 +42,40 @@ namespace Jh.Core.Results.Normal
             var secondModel = GetSeconModel<T2>();
             return method(this, firstModel, secondModel);
         }
-
         Result IErrorStage.Finally(Action action)
         {
             action();
             return this;
+        }
+
+        #region
+        T1 Generate<T1>()
+        {
+            return Activator.CreateInstance<T1>();
+        }
+        void ParseByResultModel<T1>(T1 model)
+            where T1 : class
+        {
+            if (model == null || model == default) { return; }
+            if (model is IBaseResult cmd)
+            {
+                cmd.IsSuccess = this.IsSuccess;
+                cmd.Error = cmd.Error;
+            }
+
+        }
+        #endregion
+
+        public T2 FinallyWithResult<T2>(Func<Result, T2, T2> method) where T2 : class
+        {
+            var result = GetObject<T2>();
+            if (result == null || result == default)
+            {
+                result = Generate<T2>();
+            }
+            ParseByResultModel(result);
+            result = method.Invoke(this, result);
+            return result;
         }
     }
 }

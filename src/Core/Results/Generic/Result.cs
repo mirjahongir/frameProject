@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Jh.Core.Errors;
@@ -29,11 +30,11 @@ namespace Jh.Core.Results.Generic
             _value = value;
         }
 
-        readonly Dictionary<Type, object> objList = new Dictionary<Type, object>();
+        readonly Dictionary<string, object> objList = new Dictionary<string, object>();
 
         private T GetObject<T>()
         {
-            var tip = typeof(T);
+            var tip = typeof(T).GUID.ToString();
             if (objList.ContainsKey(tip))
             {
                 return (T)objList[tip];
@@ -42,26 +43,17 @@ namespace Jh.Core.Results.Generic
             return default;
 
         }
-        private T GetObjects<T>(List<object> objectList)
-        {
-            if (objectList.Count == 1)
-            {
-                return (T)objectList[0];
-            }
-            throw new Exception("");
 
-
-        }
         private void SetObject<T1>(T1 value)
         {
-            var tip = typeof(T1);
+            var tip = typeof(T1).GUID.ToString();
             var exist = objList.FirstOrDefault(m => m.Key == tip);
             if (exist.Key == null)
             {
                 objList.Add(tip, value);
             }
-
         }
+
         private Dictionary<string, object> _data;
         public void SetObject(string name, object obj)
         {
@@ -87,15 +79,19 @@ namespace Jh.Core.Results.Generic
         }
         private Result<T> ParseError(Exception ext)
         {
+            var st = new StackTrace(ext, true);
+            var frame = st.GetFrame(0);
             if (ext is FrameException sd)
             {
                 Error = sd;
+
             }
             else
             {
                 Error = new FrameException(ext.Message);
             }
-
+            Error.LineNumber = frame.GetFileLineNumber();
+            Error.FileName = frame.GetFileName();
             IsSuccess = false;
             return this;
         }
@@ -110,6 +106,19 @@ namespace Jh.Core.Results.Generic
         public static IEachStage<T> Create()
         {
             return new Result<T>();
+        }
+        public static ISuccessStage<T> Create(Action<Result<T>> method)
+        {
+            var result = new Result<T>();
+            try
+            {
+                method.Invoke(result);
+                return result;
+            }
+            catch (Exception ext)
+            {
+                return null;
+            }
         }
         public static ISuccessStage<T> Create(Func<T> method)
         {

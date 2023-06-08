@@ -33,8 +33,8 @@ namespace Jh.Web.Filters
             foreach (var i in list)
             {
                 var attr = i.GetCustomAttribute<JwtPropertyAttribute>();
-                if(attr != null)
-                SetJwtValueToProperty(context.HttpContext.User, i, value, attr);
+                if (attr != null)
+                    SetJwtValueToProperty(context.HttpContext.User, i, value, attr);
             }
         }
         public void CheckAuthModel(ActionExecutingContext context, object value, Type valueType)
@@ -70,8 +70,8 @@ namespace Jh.Web.Filters
             foreach (var i in userInfo.PropertyType.GetProperties())
             {
                 var attribute = i.GetCustomAttribute<JwtPropertyAttribute>();
-                if(attribute != null)
-                SetJwtValueToProperty(context.HttpContext.User, i, obj, attribute);
+                if (attribute != null)
+                    SetJwtValueToProperty(context.HttpContext.User, i, obj, attribute);
             }
 
 
@@ -221,7 +221,10 @@ namespace Jh.Web.Filters
                         return;
                 }
             }
-
+            if (Permissions == null && Position == null)
+            {
+                return;
+            }
             context.Result = new StatusCodeResult((int)System.Net.HttpStatusCode.Forbidden);
             return;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
@@ -80,9 +79,10 @@ namespace Jh.Core.Results.Generic
                 method.Invoke(this).Wait();
                 return this;
             }
-            catch (Exception ext)
+            catch (AggregateException ext)
             {
-                return ParseError(ext);
+               var ee= ext.InnerException;
+                return ParseError(ee);
             }
         }
 

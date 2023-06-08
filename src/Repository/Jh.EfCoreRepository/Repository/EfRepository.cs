@@ -120,7 +120,11 @@ namespace Jh.EfCoreRepository.Repository
         }
         public virtual void UpdateRange(IEnumerable<T> models)
         {
-            Context.Entry(models).State = EntityState.Modified;
+            foreach(var i in models)
+            {
+                Context.Entry(i).State = EntityState.Modified;
+            }
+            
             Table.UpdateRange(models);
             SaveChanges();
         }

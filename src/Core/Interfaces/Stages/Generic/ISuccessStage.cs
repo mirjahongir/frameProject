@@ -19,11 +19,11 @@ namespace Jh.Core.Interfaces.Stages.Generic
 
         ISuccessStage<T> OnNextAsync(Func<Result<T>, Task> method);
 
-        
-        
+        ISuccessStage<T> OnNext<T1, T2, T3>(Func<Result<T>, T1, T2, T3> method);
+
         ISuccessStage<T> OnNextAsync<T1>(Func<Result<T>, T1, Task<T1>> method);
         ISuccessStage<T> OnNextAsync<T1>(Func<Result<T>, T1, Task> method);
-        
+
         ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task<Tuple<T1, T2>>> method);
         ISuccessStage<T> OnNextAsync<T1, T2>(Func<Result<T>, T1, T2, Task> method);
         ISuccessStage<T> OnNext<T1, T2>(Func<Result<T>, T1, T2> method);

@@ -1,4 +1,6 @@
 ﻿
+using Jh.Core.Errors;
+
 namespace Jh.Web.Models
 {
     public class ErrorModal
@@ -7,6 +9,12 @@ namespace Jh.Web.Models
         public ErrorModal(string message)
         {
             Message = message;
+        }
+        public ErrorModal(FrameException frame)
+        {
+            Message= frame.Message;
+            Code = frame.Code.GetValueOrDefault();
+
         }
         public int Code { get; set; }
         public string Message { get; set; }

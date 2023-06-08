@@ -1,5 +1,5 @@
 ﻿using Jh.Core.Errors;
-using Jh.Core.ViewModels.Commands.Result;
+using Jh.Core.ViewModels;
 using Jh.Web.Models;
 using Jh.Web.Startup;
 
@@ -17,7 +17,7 @@ namespace Jh.Web.WebResults
         public void CheckEventResponce(T model)
         {
 
-            if (model is IEventResult result)
+            if (model is IBaseResult result)
             {
                 IsSuccess = result.IsSuccess;
             }
@@ -112,6 +112,7 @@ new ErrorModal(exception.Message){ }
         public void ParseError(FrameException exception)
         {
             SetStatus();
+            Errors = new List<ErrorModal>() { new ErrorModal(exception) };
         }
         public List<ErrorModal> Errors { get; set; }
         public static implicit operator WebResult<T>(Exception ext)

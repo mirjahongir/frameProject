@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+
 using Jh.Core.Interfaces.Stages.Generic;
 
 namespace Jh.Core.Results.Generic
@@ -27,7 +28,7 @@ namespace Jh.Core.Results.Generic
             {
                 var model = method.Invoke(this);
                 if (model == null) return this;
-                objList.Add(model.GetType(), model);
+                SetObject<T1>(model);
                 return this;
             }
             catch (Exception ex)
@@ -54,9 +55,9 @@ namespace Jh.Core.Results.Generic
             if (IsChecked) return this;
             try
             {
-                var model =  method.Invoke(this).Result;
+                var model = method.Invoke(this).Result;
                 if (model == null) return this;
-                objList.Add(model.GetType(), model);
+                SetObject<T1>(model);
                 return this;
             }
             catch (Exception ex)
@@ -65,7 +66,7 @@ namespace Jh.Core.Results.Generic
             }
         }
 
-        
+
     }
 
 }

@@ -18,18 +18,31 @@ namespace Jh.Core.Results.Normal
             get { return new Result(); }
 
         }
+        //public static ISuccessStage OnNext()
+        //{
+
+        //}
+        public static ITryStage StartCreate
+        {
+            get { return new Result(); }
+        }
+
         public FrameException? Error { get; private set; }
-        private object _first { get; set; }
-        private object _second { get; set; }
 
         private T GetFirstModel<T>()
         {
-            return (T)_first;
+            var name = typeof(T).GUID.ToString();
+            if (privateData.ContainsKey(name))
+            {
+                return (T)privateData[name];
+            }
+            return default;
+            //return (T)_first;
         }
         private Dictionary<string, object> _data = new Dictionary<string, object>();
         private readonly Dictionary<string, object> privateData = new Dictionary<string, object>();
         private T GetObject<T>()
-          
+
         {
             var name = nameof(T).ToLower();
             if (privateData.ContainsKey(name))
@@ -41,7 +54,8 @@ namespace Jh.Core.Results.Normal
         }
         private void SetObject<T>(T model)
         {
-            var name = nameof(T).ToLower();
+
+            var name = typeof(T).GUID.ToString();//typeof(T).Name.ToLower();
             if (privateData.ContainsKey(name))
             {
                 privateData[name] = model;
@@ -54,17 +68,19 @@ namespace Jh.Core.Results.Normal
             _data ??= new Dictionary<string, object>();
             _data[name] = obj;
         }
-        public object GetObject(string name)
-        {
-            return _data[name];
-        }
+
         public TValue GetObject<TValue>(string name)
         {
             return (TValue)_data[name];
         }
         private T GetSeconModel<T>()
         {
-            return (T)_second;
+            var name = typeof(T).GUID.ToString();
+            if (privateData.ContainsKey(name))
+            {
+                return (T)privateData[name];
+            }
+            return default;
         }
 
         private void ParseError(Exception ext)
