@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
 using Jh.Core.Errors;
 using Jh.Core.Interfaces.Stages.Generic;
 
@@ -45,7 +44,7 @@ namespace Jh.Core.Results.Generic
 
         private T GetObject<T>()
         {
-            var tip = typeof(T).GUID.ToString();
+            var tip = GetKey<T>();
             if (objList.ContainsKey(tip))
             {
                 return (T)objList[tip];
@@ -54,14 +53,30 @@ namespace Jh.Core.Results.Generic
             return default;
 
         }
+        string GetKey<T1>()
+        {
+            var tip = typeof(T1);
+            var guid = tip.GUID.ToString();
+            var args = tip.GetGenericArguments();
+            if (tip.GetGenericArguments() != null)
+            {
+                foreach (var i in args)
+                {
+                    guid += i.GUID.ToString();
+                }
+            }
+            return guid;
 
+        }
         private void SetObject<T1>(T1 value)
         {
-            var tip = typeof(T1).GUID.ToString();
+
+            var tip = GetKey<T1>();
             var exist = objList.FirstOrDefault(m => m.Key == tip);
             if (exist.Key == null)
             {
                 objList.Add(tip, value);
+                return;
             }
             objList[tip] = value;
         }

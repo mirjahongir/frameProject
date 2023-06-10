@@ -22,6 +22,7 @@ namespace Jh.Core.Interfaces.Repository
         void RemoveRange(IEnumerable<T> models, CancellationToken? token = null);
         void Update(T model, CancellationToken? token = null);
         void UpdateRange(IEnumerable<T> models);
+        bool RemoveWhere(Expression<Func<T, bool>> predicate);
     }
 
 

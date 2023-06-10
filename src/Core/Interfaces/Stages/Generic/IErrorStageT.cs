@@ -11,7 +11,7 @@ namespace Jh.Core.Interfaces.Stages.Generic
         Result<T> Finally(Action action);
 
         Result<T> Finally(Action<Result<T>> action);
-
+        Result<T> Finally<T1>(Action<Result<T>, T1> action);
         T1 FinallyWithResult<T1>(Func<Result<T>, T1, T1> method)
             where T1 : class;
 

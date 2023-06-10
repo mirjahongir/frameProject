@@ -22,7 +22,12 @@ namespace Jh.Core.Results.Generic
             action(this);
             return this;
         }
-
+        public Result<T> Finally<T1>(Action<Result<T>, T1> action)
+        {
+            var first = GetObject<T1>();
+            action(this, first);
+            return this;
+        }
         public T1 Finally<T1>(Func<Result<T>, T1> method)
         {
             return method(this);
@@ -75,15 +80,7 @@ namespace Jh.Core.Results.Generic
             }
 
         }
-        void ParseByICommandResult<T1>(T1 model)
-        {
-            
 
-        }
-        void ParseByQueryResult<T1>(T1 model)
-        {
-
-        }
         public T1 FinallyWithResult<T1>(Func<Result<T>, T1, T1> method) where T1 : class
         {
             var result = GetObject<T1>();
@@ -121,6 +118,8 @@ namespace Jh.Core.Results.Generic
             return method.Invoke(this, firstObject, secondObject, result);
 
         }
+
+
         #endregion
     }
 }

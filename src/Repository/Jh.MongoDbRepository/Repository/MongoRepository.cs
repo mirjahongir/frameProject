@@ -4,8 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Jh.Core.Interfaces.Repository;
 using Jh.MongoDbRepository.Interfaces;
+
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -99,31 +101,37 @@ namespace Jh.MongoDbRepository.Repository
             return model;
         }
 
-        public void RemoveRange    (System.Collections.Generic.IEnumerable<T> models, CancellationToken? token = null)
+        public void RemoveRange(System.Collections.Generic.IEnumerable<T> models, CancellationToken? token = null)
         {
             foreach (var i in models)
             {
                 _db.DeleteOne(m => m.Id == i.Id);
             }
-            
+
+        }
+        public bool RemoveWhere(Expression<Func<T, bool>> predicate)
+        {
+            _db.DeleteMany(predicate); return true;
         }
         #endregion
         #region Update ...
-        public void Update (T model, CancellationToken? token = null)
+        public void Update(T model, CancellationToken? token = null)
         {
             _db.FindOneAndReplace(m => m.Id == model.Id, model);
-            
+
         }
 
-        public  void UpdateRange(IEnumerable<T> models)
+        public void UpdateRange(IEnumerable<T> models)
         {
             var data = new List<WriteModel<T>>();
             foreach (var i in models)
             {
                 data.Add(new ReplaceOneModel<T>(i.Id, i));
             }
-             _db.BulkWriteAsync(data, new BulkWriteOptions() { IsOrdered = false }).Wait();
+            _db.BulkWriteAsync(data, new BulkWriteOptions() { IsOrdered = false }).Wait();
         }
+
+
 
         #endregion
 

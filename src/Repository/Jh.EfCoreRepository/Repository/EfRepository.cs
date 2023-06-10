@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 using Jh.Core.Interfaces.Repository;
 using Jh.EfCoreRepository.Interfaces;
 
@@ -106,6 +107,7 @@ namespace Jh.EfCoreRepository.Repository
             SaveChanges();
 
         }
+
         #endregion
 
         #region Update
@@ -120,11 +122,11 @@ namespace Jh.EfCoreRepository.Repository
         }
         public virtual void UpdateRange(IEnumerable<T> models)
         {
-            foreach(var i in models)
+            foreach (var i in models)
             {
                 Context.Entry(i).State = EntityState.Modified;
             }
-            
+
             Table.UpdateRange(models);
             SaveChanges();
         }
@@ -159,6 +161,12 @@ namespace Jh.EfCoreRepository.Repository
                 Console.WriteLine(ext.Message);
                 return new Tuple<bool, Exception>(false, ext);
             }
+        }
+
+        public bool RemoveWhere(Expression<Func<T, bool>> predicate)
+        {
+            Find(predicate).ExecuteDelete();
+            return true;
         }
     }
 }
